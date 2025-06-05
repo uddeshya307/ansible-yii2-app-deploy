@@ -1,0 +1,37 @@
+server {
+    listen 80;
+    server_name localhost;
+
+    # Host path where Nginx can access static files
+    root /home/ec2-user/yii2-devops-stack/sample-php-yii2-app/web;
+    index index.php index.html;
+
+    # Serve static assets (CSS, JS, images) directly from host filesystem
+    location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        root /home/ec2-user/yii2-devops-stack/sample-php-yii2-app/web;
+        try_files $uri =404;
+        access_log off;
+        expires 1y;
+    }
+
+    # Main application routing (fallback to Yii index.php)
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    # PHP processing — sends request to PHP-FPM inside container
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_pass 127.0.0.1:9000;  # Assumes container exposes PHP-FPM here
+        fastcgi_index index.php;
+
+        # Use path inside the container where the code is mounted
+          fastcgi_param SCRIPT_FILENAME /var/www/html/web$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+
+    # Deny access to .htaccess and other hidden files
+    location ~ /\. {
+        deny all;
+    }
+}

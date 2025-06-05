@@ -1,0 +1,5 @@
+- name: Deploy yii2-php application
+  hosts: local
+  become: yes
+  role:
+    - uddeshya307.yii2-app-deploy

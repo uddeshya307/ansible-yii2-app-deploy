@@ -1,0 +1,72 @@
+tasks:
+  - name: Install Docker
+    yum:
+      name:
+        - docker
+      state: present
+      update_cache: yes
+      
+
+  - name: Start and enable Docker
+    systemd:
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: Download Docker Compose binary
+    get_url:
+      url: "https://github.com/docker/compose/releases/latest/download/docker-compose-{{ ansible_system | lower }}-{{ ansible_architecture }}"
+      dest: /usr/local/bin/docker-compose
+      mode: '0755'
+  
+
+  - name: Install additional dependencies
+    yum:
+      name:
+        - nginx
+        - git
+        - php
+        - php-fpm
+        - php-mysqlnd
+      state: present
+      update_cache: yes
+
+
+  - name: Show home directory
+    debug:
+      msg: "Local user is {{ lookup('env','USER') }} && {{ ansible_host }}"
+        
+        
+        
+  - name: Clone Yii2 repo
+    git:
+      repo: 'https://github.com/uddeshya307/yii2-devops-stack.git'
+      dest: "/home/{{ lookup('env','USER') }}"
+      
+      
+
+  - name: Copy NGINX config
+    template:
+      src: yii2app.conf.j2
+      dest: /etc/nginx/conf.d/yii2app.conf
+    notify: restart nginx
+    
+  
+  - name: Build Docker image
+    shell: |
+      docker build -t {{ image_name }}:{{ image_tag }} {{ docker_context_path }}  
+    args:
+      chdir: "{{ docker_context_path }}"
+
+  - name: Copy Docker compose
+    template:
+      src: docker-compose.yml.j2
+      dest: /home/{{ lookup('env','USER') }}/docker-compose.yml
+    notify: deploy application
+
+
+  - name: Initialize Docker Swarm
+    shell: docker swarm init --advertise-addr {{ ansible_host }}
+    args:
+      creates: /var/lib/docker/swarm
+        

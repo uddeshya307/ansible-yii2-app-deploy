@@ -1,0 +1,10 @@
+---
+# handlers file for deploy-yii2-php-app
+handlers:
+  - name: restart nginx
+    service:
+      name: nginx
+      state: reloaded
+      
+  - name: deploy application
+    shell: docker stack deploy -c /home/{{ lookup('env','USER') }}/docker-compose.yml yii2app
