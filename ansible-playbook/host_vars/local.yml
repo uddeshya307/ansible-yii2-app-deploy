@@ -1,3 +1,0 @@
-image_name: uddeshya307/yii2-app
-image_tag: initial
-docker_context_path: /home/{{ lookup('env','USER') }}/yii2-devops-stack

@@ -36,16 +36,17 @@
 
 
 
-- name: Show home directory
+- name: Show host
+  become: no
   debug:
-    msg: "Local user is {{ lookup('env','USER') }} && {{ ansible_host }}"
+    msg: "Host is {{ ansible_host }}"
 
 
 
 - name: Clone Yii2 repo
   git:
     repo: 'https://github.com/uddeshya307/yii2-devops-stack.git'
-    dest: "/home/{{ lookup('env','USER') }}"
+    dest: "/home/ec2-user"
 
 
 
@@ -58,6 +59,7 @@
 
 
 - name: Build Docker image
+  become: no
   shell: |
     docker build -t {{ image_name }}:{{ image_tag }} {{ docker_context_path }}
   args:
@@ -66,9 +68,10 @@
 
 
 - name: Copy Docker compose
+  become: no
   template:
     src: docker-compose.yml.j2
-    dest: /home/{{ lookup('env','USER') }}/docker-compose.yml
+    dest: /home/ec2-user/docker-compose.yml
   notify: deploy application
 
 
