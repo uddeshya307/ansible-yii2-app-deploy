@@ -46,7 +46,7 @@
 - name: Clone Yii2 repo
   git:
     repo: 'https://github.com/uddeshya307/yii2-devops-stack.git'
-    dest: "/home/ec2-user"
+    dest: "/home/ec2-user/yii2-devops-stack"
 
 
 
@@ -77,6 +77,6 @@
 
 
 - name: Initialize Docker Swarm
-  shell: docker swarm init --advertise-addr {{ ansible_host }}
+  shell: docker swarm init --advertise-addr 127.0.0.1
   args:
     creates: /var/lib/docker/swarm

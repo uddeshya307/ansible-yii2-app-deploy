@@ -7,4 +7,4 @@
     state: reloaded
       
 - name: deploy application
-  shell: docker stack deploy -c /home/{{ lookup('env','USER') }}/docker-compose.yml yii2app
+  shell: docker stack deploy -c /home/ec2-user/docker-compose.yml yii2app
