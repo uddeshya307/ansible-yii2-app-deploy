@@ -12,6 +12,7 @@ services:
       - /home/ec2-user/yii2-devops-stack/sample-php-yii2-app/web:/var/www/html/web
     networks:
       - appnet
+    command: bash -c "chown -R www-data:www-data web/assets && chmod -R 775 web/assets && php-fpm"  
 
 networks:
   appnet:
