@@ -3,12 +3,12 @@ server {
     server_name localhost;
 
     # Host path where Nginx can access static files
-    root /home/ec2-user/yii2-devops-stack/sample-php-yii2-app/web;
+    root /home/{{ lookup('env','USER') }}/yii2-devops-stack/sample-php-yii2-app/web;
     index index.php index.html;
 
     # Serve static assets (CSS, JS, images) directly from host filesystem
     location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-        root /home/ec2-user/yii2-devops-stack/sample-php-yii2-app/web;
+        root /home/{{ lookup('env','USER') }}/yii2-devops-stack/sample-php-yii2-app/web;
         try_files $uri =404;
         access_log off;
         expires 1y;
