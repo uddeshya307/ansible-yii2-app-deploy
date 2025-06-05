@@ -37,7 +37,6 @@
 
 
 - name: Show host
-  become: no
   debug:
     msg: "Host is {{ ansible_host }}"
 
@@ -59,7 +58,6 @@
 
 
 - name: Build Docker image
-  become: no
   shell: |
     docker build -t {{ image_name }}:{{ image_tag }} {{ docker_context_path }}
   args:
@@ -78,5 +76,3 @@
 
 - name: Initialize Docker Swarm
   shell: docker swarm init --advertise-addr 127.0.0.1
-  args:
-    creates: /var/lib/docker/swarm
