@@ -9,7 +9,7 @@ services:
         protocol: tcp
         mode: host
     volumes:
-      - /home/ec2-user/yii2-devops-stack/sample-php-yii2-app:/var/www/html
+      - /home/ec2-user/yii2-devops-stack/sample-php-yii2-app/web:/var/www/html/web
     networks:
       - appnet
 
